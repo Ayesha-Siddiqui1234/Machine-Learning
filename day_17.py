@@ -19,12 +19,18 @@ pd.DataFrame(response.json()['results']).head(2)[['id','title','overview','popul
 df=pd.DataFrame()
 df
 
-#making data frame for each page in a loop and then combine all the data frames to make a big dataframe of 8000+ movies
-for i in range(1,521):
-  response=requests.get('https://api.themoviedb.org/3/movie/top_rated?api_key=e7e9dd2aa2baebc22993fc851f98d1e8&language=en-US&page={}'.format(i))
-  temp_dataframe=pd.DataFrame(response.json()['results']).head(2)[['id','title','overview','popularity','release_date','vote_average','vote_count']]
-  df = pd.concat([df, temp_dataframe], ignore_index=True)  #ignore indexing
+#making data frame for each page in a loop and then combine all the data frames to make a big dataframe of 8000+ movie
+all_dfs = []
+for i in range(1,500):
+    response = requests.get('https://api.themoviedb.org/3/movie/top_rated?api_key=8265bd1679663a7ea12ac168da84d2e8&language=en-US&page={}'.format(i))
+    temp_df = pd.DataFrame(response.json()['results'])[['id','title','overview','release_date','popularity','vote_average','vote_count']]
+  
+    all_dfs.append(temp_df)
+
+# Combine all dataframes into one big dataframe
+df = pd.concat(all_dfs, ignore_index=True)
+    df
 
 df.shape
 
-movies.to_csv('movies.csv')
+df.to_csv('movies.csv')
